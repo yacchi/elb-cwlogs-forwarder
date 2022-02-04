@@ -1,0 +1,10 @@
+.idea
+*.iml
+*.tgz
+.envrc
+.prettierrc
+.tool-versions
+jest.config.js
+tsconfig.json
+*.ts
+!*.d.ts
