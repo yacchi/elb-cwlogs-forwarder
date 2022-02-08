@@ -41,7 +41,12 @@ export class ELBLogs2CloudWatchForwarder extends Construct {
 
         const { bucket, prefix, logGroup } = props
 
-        const queue = new Queue(this, `${id}-log-event`, props.logEventQueueProps)
+        let timeout = props.logEventQueueProps?.visibilityTimeout ?? props.forwarderProps?.timeout ?? Duration.minutes(1)
+
+        const queue = new Queue(this, `${id}-log-event`, {
+            visibilityTimeout: timeout,
+            ...props.logEventQueueProps,
+        })
         this.logEventQueue = queue
 
         bucket.addEventNotification(EventType.OBJECT_CREATED, new SqsDestination(queue), {
@@ -76,7 +81,7 @@ export class ELBLogs2CloudWatchForwarder extends Construct {
             handler: 'lambdaHandler',
             depsLockFilePath: path.join(projectRoot, 'yarn.lock'),
             runtime: Runtime.NODEJS_14_X,
-            timeout: Duration.minutes(1),
+            timeout,
             logRetention: RetentionDays.ONE_MONTH,
             architecture: Architecture.ARM_64,
             environment,
