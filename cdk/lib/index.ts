@@ -2,12 +2,12 @@ import * as path from 'path'
 import * as fs from 'fs'
 import { Duration } from 'aws-cdk-lib'
 import { Construct } from 'constructs'
-import { Bucket, EventType } from 'aws-cdk-lib/aws-s3'
+import { EventType, IBucket } from 'aws-cdk-lib/aws-s3'
 import { SqsDestination } from 'aws-cdk-lib/aws-s3-notifications'
 import { ILogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs'
 import { Queue, QueueProps } from 'aws-cdk-lib/aws-sqs'
 import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs'
-import { Architecture, Runtime, Function } from 'aws-cdk-lib/aws-lambda'
+import { Architecture, Function, Runtime } from 'aws-cdk-lib/aws-lambda'
 import { ELBLogForwarderLambdaEnv, LogFormat, LogStreamNameSource } from '../../lib/lambda'
 import { SqsEventSource } from 'aws-cdk-lib/aws-lambda-event-sources'
 import { NodejsFunctionProps } from 'aws-cdk-lib/aws-lambda-nodejs/lib/function'
@@ -15,7 +15,7 @@ import { Effect, PolicyStatement } from 'aws-cdk-lib/aws-iam'
 
 export type ELBLogs2CloudWatchForwarderProps = {
     // Define construct properties here
-    bucket: Bucket
+    bucket: IBucket
     prefix?: string
     logGroup: ILogGroup
     logFormat: LogFormat
