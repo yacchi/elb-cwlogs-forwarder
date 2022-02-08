@@ -87,7 +87,7 @@ export class ELBLogs2CloudWatchForwarder extends Construct {
             environment,
             ...props.forwarderProps,
         })
-        
+
         this.forwarderFunction = forwarder
 
         forwarder.addToRolePolicy(new PolicyStatement({
@@ -101,12 +101,22 @@ export class ELBLogs2CloudWatchForwarder extends Construct {
                 ],
             },
         ))
+        
+        forwarder.addToRolePolicy(new PolicyStatement({
+            sid: 'FindLogStreams',
+            effect: Effect.ALLOW,
+            actions: [
+                'logs:DescribeLogStreams',
+            ],
+            resources: [
+                'arn:aws:logs:*:*:*',
+            ]
+        }))
 
         forwarder.addToRolePolicy(new PolicyStatement({
             sid: 'ForwardingLog',
             effect: Effect.ALLOW,
             actions: [
-                'logs:DescribeLogStreams',
                 'logs:CreateLogStream',
                 'logs:PutLogEvents',
             ],
